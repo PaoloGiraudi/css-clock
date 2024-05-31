@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CSS Clock</title>
+    <style>
+      :root {
+        --h: 160;
+        --bg: var(--h) 28% 60%;
+        --color: var(--h) 100% 6%;
+        --shadow-color: var(--h) 10% 40%;
+      }
+      @property --seconds {
+        syntax: "<angle>";
+        inherits: false;
+        initial-value: 0deg;
+      }
+
+      @property --minutes {
+        syntax: "<angle>";
+        inherits: false;
+        initial-value: 0deg;
+      }
+
+      @property --hours {
+        syntax: "<angle>";
+        inherits: false;
+        initial-value: 0deg;
+      }
+
+      body {
+        overflow: hidden;
+        margin: 0;
+        background-color: hsl(var(--bg));
+        display: grid;
+        place-items: center;
+        height: 100svh;
+        width: 100svw;
+
+        & *,
+        *::after,
+        *::before {
+          aspect-ratio: 1;
+          animation-fill-mode: forwards;
+          box-shadow: 0 3px 5px -2px hsl(var(--shadow-color) / 0.2),
+            0 7px 14px -5px hsl(var(--shadow-color) / 0.3);
+        }
+      }
+
+      div {
+        width: min(50rem, calc(100vw - 4rem));
+        display: grid;
+        place-items: center;
+        grid-template-areas: "clock";
+
+        background-image: conic-gradient(
+          from var(--seconds),
+          transparent,
+          hsl(var(--color) / 0.15)
+        );
+
+        animation: 60s seconds linear infinite;
+      }
+
+      div::after {
+        content: "";
+        width: 80%;
+        grid-area: clock;
+        background-image: conic-gradient(
+          from var(--minutes),
+          transparent,
+          hsl(var(--color) / 0.25)
+        );
+        animation: 3600s minutes linear infinite;
+      }
+
+      div::before {
+        content: "";
+        width: 60%;
+        grid-area: clock;
+        background-image: conic-gradient(
+          from var(--hours),
+          transparent,
+          hsl(var(--color) / 0.35)
+        );
+        animation: 43200s hours linear infinite;
+      }
+
+      @keyframes seconds {
+        from {
+          --seconds: var(--start-seconds);
+        }
+        to {
+          --seconds: calc(var(--start-seconds) + 1turn);
+        }
+      }
+      @keyframes minutes {
+        from {
+          --minutes: var(--start-minutes);
+        }
+        to {
+          --minutes: calc(var(--start-minutes) + 1turn);
+        }
+      }
+      @keyframes hours {
+        from {
+          --hours: var(--start-hours);
+        }
+        to {
+          --hours: calc(var(--start-hours) + 1turn);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div></div>
+    <script>
+      const now = new Date();
+      const seconds = now.getSeconds();
+      const minutes = now.getMinutes() + seconds / 60;
+      const hours = now.getHours() + minutes / 60;
+
+      document.documentElement.style.setProperty(
+        "--start-seconds",
+        `${seconds * 6}deg`
+      );
+
+      document.documentElement.style.setProperty(
+        "--start-minutes",
+        `${minutes * 6}deg`
+      );
+
+      document.documentElement.style.setProperty(
+        "--start-hours",
+        `${hours * 30}deg`
+      );
+    </script>
+  </body>
+</html>
