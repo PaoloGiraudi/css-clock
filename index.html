@@ -111,10 +111,10 @@
             }
             @keyframes hours {
                 from {
-                    --hours: 120deg;
+                    --hours: var(--start-hours);
                 }
                 to {
-                    --hours: 360deg;
+                    --hours: calc(var(--start-hours) + 1turn);
                 }
             }
         </style>
